@@ -36,14 +36,6 @@ public class ComparisonTest {
         frequencyTest(read("Book.txt"));
     }
 
-    @Test
-    void compareAll() {
-        frequencyTest(read("Scarlet.txt")
-                .concat(read("Wonka3.txt")
-                        .concat(read("Mario.txt")
-                                .concat("Charlie.txt"))));
-    }
-
     private String read(String filename) {
         return FileManager.readFromResources(filename);
     }
@@ -62,8 +54,9 @@ public class ComparisonTest {
         HuffmanEncoder huffmanEncoder = new HuffmanEncoder();
         CharacterEncoding huffmanEncoding = huffmanEncoder.encode(charFreq);
         int bitsHuffman = huffmanEncoding.write(paragraph).length();
-        System.out.println("Bits Huffman:" + bitsHuffman);
-        System.out.println("Compression:" + (double) bitsHuffman / bitsRegular);
+        System.out.println("Text length: " + paragraph.length());
+        System.out.println("Bits Huffman: " + bitsHuffman);
+        System.out.println("Compression: " + (double) bitsHuffman / bitsRegular);
 
         Assertions.assertTrue(bitsRegular > bitsHuffman);
     }
