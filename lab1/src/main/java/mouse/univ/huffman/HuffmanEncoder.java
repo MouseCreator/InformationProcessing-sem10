@@ -60,7 +60,7 @@ public class HuffmanEncoder implements Encoder {
             Entry newEntry = new Entry(first, second);
             int i = Collections.binarySearch(entryList, newEntry, Comparator.comparingDouble(e -> e.frequency));
             int toInsert;
-            if (i > 0) {
+            if (i >= 0) {
                 toInsert = i;
             } else {
                 toInsert = -i - 1;
