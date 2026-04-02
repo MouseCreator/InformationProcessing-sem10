@@ -56,7 +56,7 @@ public class ComparisonTest {
         int bitsHuffman = huffmanEncoding.write(paragraph).length();
         System.out.println("Bits Huffman: " + bitsHuffman);
         System.out.println("Text length: " + paragraph.length());
-        System.out.println("Compression: " + (double) bitsHuffman / bitsRegular);
+        System.out.println("Compression: " + (1.0 - (double) bitsHuffman / bitsRegular));
 
         Assertions.assertTrue(bitsRegular > bitsHuffman);
     }
