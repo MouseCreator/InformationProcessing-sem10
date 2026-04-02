@@ -49,13 +49,13 @@ public class ComparisonTest {
         RegularEncoder regularEncoder = new RegularEncoder();
         CharacterEncoding regularEncoding = regularEncoder.encode(charFreq);
         int bitsRegular = regularEncoding.write(paragraph).length();
-        System.out.println("Bits regular:" + bitsRegular);
+        System.out.println("Bits regular: " + bitsRegular);
 
         HuffmanEncoder huffmanEncoder = new HuffmanEncoder();
         CharacterEncoding huffmanEncoding = huffmanEncoder.encode(charFreq);
         int bitsHuffman = huffmanEncoding.write(paragraph).length();
-        System.out.println("Text length: " + paragraph.length());
         System.out.println("Bits Huffman: " + bitsHuffman);
+        System.out.println("Text length: " + paragraph.length());
         System.out.println("Compression: " + (double) bitsHuffman / bitsRegular);
 
         Assertions.assertTrue(bitsRegular > bitsHuffman);
