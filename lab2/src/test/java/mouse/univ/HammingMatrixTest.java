@@ -94,11 +94,11 @@ class HammingMatrixTest {
         for (int i = 0; i < 16; i++) {
             boolean[] number = Bits.bitWise(i, 4);
             boolean[] verifiedInfo = matrix.createVerification(number);
-            assertTrue(matrix.verify(verifiedInfo));
+            assertEquals(-1, matrix.verify(verifiedInfo));
             for (int j = 0; j < verifiedInfo.length; j++) {
                 verifiedInfo[j] = !verifiedInfo[j];
-                System.out.println(vectorToString(verifiedInfo));
-                assertFalse(matrix.verify(verifiedInfo), "Passed verification when flipped bit " + j);
+                int verify = matrix.verify(verifiedInfo);
+                assertEquals(j, verify, "Passed verification when flipped bit " + j);
                 verifiedInfo[j] = !verifiedInfo[j];
             }
         }
@@ -116,10 +116,10 @@ class HammingMatrixTest {
         for (int i = 0; i < 1 << length; i++) {
             boolean[] number = Bits.bitWise(i, length);
             boolean[] verifiedInfo = matrix.createVerification(number);
-            assertTrue(matrix.verify(verifiedInfo));
+            assertEquals(-1, matrix.verify(verifiedInfo));
             for (int j = 0; j < verifiedInfo.length; j++) {
                 verifiedInfo[j] = !verifiedInfo[j];
-                assertFalse(matrix.verify(verifiedInfo));
+                assertEquals(j, matrix.verify(verifiedInfo), "Passed verification when flipped bit " + j);
                 verifiedInfo[j] = !verifiedInfo[j];
             }
         }
@@ -134,6 +134,6 @@ class HammingMatrixTest {
         System.out.println("Message length: " + length);
         boolean[] number = Bits.bitWise(10000, length);
         boolean[] verifiedInfo = matrix.createVerification(number);
-        assertTrue(matrix.verify(verifiedInfo));
+        assertEquals(-1, matrix.verify(verifiedInfo));
     }
 }

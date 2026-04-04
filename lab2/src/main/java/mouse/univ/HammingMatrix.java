@@ -72,21 +72,30 @@ public class HammingMatrix {
         return verifier;
     }
 
-    public boolean verify(boolean[] block) {
+    public int verify(boolean[] block) {
         if (block.length != getNumColumns()) {
             throw new IllegalArgumentException("Mismatch of matrix and vector sizes. Columns: " + getNumColumns() + ". Size: " + block.length);
         }
         boolean[] error = multiplyBy(block);
-        for (boolean bit : error) {
-            if (bit) {
-                return false;
+        for (int i = 0; i < block.length; i++) {
+            boolean candidate = true;
+            for (int j = 0; j < error.length; j++) {
+                if (error[j] != this.matrix[j][i]) {
+                    candidate = false;
+                    break;
+                }
+            }
+            if (candidate) {
+                return i;
             }
         }
-        return true;
+
+        return -1;
     }
 
+
     private boolean[] multiplyBy(boolean[] bits) {
-        boolean[] error = new boolean[bits.length];
+        boolean[] error = new boolean[getNumRows()];
         for (int i = 0; i < getNumRows(); i++) {
             boolean current = false;
             for (int j = 0; j < getNumColumns(); j++) {
