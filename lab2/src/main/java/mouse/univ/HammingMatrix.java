@@ -8,26 +8,19 @@ public class HammingMatrix {
         if (k < 2) {
             throw new IllegalArgumentException("K should be greater than 1");
         }
-        int numColumns = 1 << k - 1;
-        int numRows = numColumns - k;
+        int numColumns = (1 << k) - 1;
+        int numRows = k;
         matrix = new boolean[numRows][numColumns];
         for (int i = 0; i < numColumns; i++) {
-            boolean[] column = bitWise(i+1, numRows);
+            boolean[] column = Bits.bitWiseReverse(i+1, numRows);
             for (int j = 0; j < numRows; j++) {
                 matrix[j][i] = column[j];
             }
         }
     }
 
-    private boolean[] bitWise(int i, int len) {
-        boolean[] column = new boolean[len];
-        int k = 0;
-        while (i > 0) {
-            column[k] = i % 2 == 1;
-            i = i / 2;
-            k++;
-        }
-        return column;
+    public int allowedMessageLength() {
+        return matrix[0].length - matrix.length;
     }
 
     public boolean[][] getBits() {
@@ -42,8 +35,7 @@ public class HammingMatrix {
         return matrix[0].length;
     }
 
-    public Block createVerification(Block block) {
-        boolean[] bits = block.getBits();
+    public boolean[] createVerification(boolean[] bits) {
         boolean[] newBits = new boolean[getNumColumns()];
         int k = 0;
         for (int i = 1; i < newBits.length; i++) {
@@ -57,7 +49,7 @@ public class HammingMatrix {
                 newBits[i] = verificationBit;
             }
         }
-        return new Block(newBits);
+        return newBits;
     }
 
     private boolean createVerificationBit(boolean[] newBits, int column) {
@@ -80,12 +72,12 @@ public class HammingMatrix {
         return verifier;
     }
 
-    public boolean verify(Block block) {
-        if (block.size() != getNumRows()) {
-            throw new IllegalArgumentException("Mismatch of matrix and vector sizes");
+    public boolean verify(boolean[] block) {
+        if (block.length != getNumColumns()) {
+            throw new IllegalArgumentException("Mismatch of matrix and vector sizes. Columns: " + getNumColumns() + ". Size: " + block.length);
         }
-        Block error = multiplyBy(block);
-        for (boolean bit : error.getBits()) {
+        boolean[] error = multiplyBy(block);
+        for (boolean bit : error) {
             if (bit) {
                 return false;
             }
@@ -93,16 +85,17 @@ public class HammingMatrix {
         return true;
     }
 
-    private Block multiplyBy(Block block) {
-        boolean[] bits = block.getBits();
+    private boolean[] multiplyBy(boolean[] bits) {
         boolean[] error = new boolean[bits.length];
         for (int i = 0; i < getNumRows(); i++) {
             boolean current = false;
             for (int j = 0; j < getNumColumns(); j++) {
-                current ^= matrix[i][j];
+                if (matrix[i][j]) {
+                    current ^= bits[j];
+                }
             }
             error[i] = current;
         }
-        return new Block(error);
+        return error;
     }
 }

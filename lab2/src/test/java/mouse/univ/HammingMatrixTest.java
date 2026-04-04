@@ -28,6 +28,14 @@ class HammingMatrixTest {
         return builder.toString();
     }
 
+    private String vectorToString(boolean[] verifiedInfo) {
+        StringBuilder builder = new StringBuilder();
+        for (boolean b : verifiedInfo) {
+            builder.append(b ? "1" : "0").append(" ");
+        }
+        return builder.toString();
+    }
+
     private void deepEquals(boolean[][] expected, boolean[][] actual) {
         Assertions.assertEquals(expected.length, actual.length, "Size mismatch");
 
@@ -70,5 +78,49 @@ class HammingMatrixTest {
 
         boolean[][] expected = MatrixFactory.fromString(expectedStr);
         deepEquals(expected, actual);
+    }
+
+    @Test
+    void testMessageLength() {
+        int k = 3;
+        HammingMatrix matrix = new HammingMatrix(k);
+        assertEquals(4, matrix.allowedMessageLength());
+    }
+
+    @Test
+    void verifyAllK3() {
+        int k = 3;
+        HammingMatrix matrix = new HammingMatrix(k);
+        for (int i = 0; i < 16; i++) {
+            boolean[] number = Bits.bitWise(i, 4);
+            boolean[] verifiedInfo = matrix.createVerification(number);
+            assertTrue(matrix.verify(verifiedInfo));
+            for (int j = 0; j < verifiedInfo.length; j++) {
+                verifiedInfo[j] = !verifiedInfo[j];
+                System.out.println(vectorToString(verifiedInfo));
+                assertFalse(matrix.verify(verifiedInfo), "Passed verification when flipped bit " + j);
+                verifiedInfo[j] = !verifiedInfo[j];
+            }
+        }
+    }
+
+
+
+    @Test
+    void verifyAllK4() {
+        int k = 4;
+        HammingMatrix matrix = new HammingMatrix(k);
+        System.out.println(matrixToString(matrix.getBits()));
+        int length = matrix.allowedMessageLength();
+        for (int i = 0; i < 1 << length; i++) {
+            boolean[] number = Bits.bitWise(i, length);
+            boolean[] verifiedInfo = matrix.createVerification(number);
+            assertTrue(matrix.verify(verifiedInfo));
+            for (int j = 0; j < verifiedInfo.length; j++) {
+                verifiedInfo[j] = !verifiedInfo[j];
+                assertFalse(matrix.verify(verifiedInfo));
+                verifiedInfo[j] = !verifiedInfo[j];
+            }
+        }
     }
 }
