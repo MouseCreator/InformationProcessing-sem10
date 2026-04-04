@@ -112,6 +112,7 @@ class HammingMatrixTest {
         HammingMatrix matrix = new HammingMatrix(k);
         System.out.println(matrixToString(matrix.getBits()));
         int length = matrix.allowedMessageLength();
+        System.out.println("Message length: " + length);
         for (int i = 0; i < 1 << length; i++) {
             boolean[] number = Bits.bitWise(i, length);
             boolean[] verifiedInfo = matrix.createVerification(number);
@@ -122,5 +123,17 @@ class HammingMatrixTest {
                 verifiedInfo[j] = !verifiedInfo[j];
             }
         }
+    }
+
+    @Test
+    void verifyAllK5() {
+        int k = 5;
+        HammingMatrix matrix = new HammingMatrix(k);
+        System.out.println(matrixToString(matrix.getBits()));
+        int length = matrix.allowedMessageLength();
+        System.out.println("Message length: " + length);
+        boolean[] number = Bits.bitWise(10000, length);
+        boolean[] verifiedInfo = matrix.createVerification(number);
+        assertTrue(matrix.verify(verifiedInfo));
     }
 }
