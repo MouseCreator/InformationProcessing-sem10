@@ -91,6 +91,9 @@ class HammingMatrixTest {
     void verifyAllK3() {
         int k = 3;
         HammingMatrix matrix = new HammingMatrix(k);
+        System.out.println(matrixToString(matrix.getBits()));
+        int length = matrix.allowedMessageLength();
+        System.out.println("Message length: " + length);
         for (int i = 0; i < 16; i++) {
             boolean[] number = Bits.bitWise(i, 4);
             boolean[] verifiedInfo = matrix.createVerification(number);
@@ -126,7 +129,7 @@ class HammingMatrixTest {
     }
 
     @Test
-    void verifyAllK5() {
+    void verifySomeK5() {
         int k = 5;
         HammingMatrix matrix = new HammingMatrix(k);
         System.out.println(matrixToString(matrix.getBits()));
